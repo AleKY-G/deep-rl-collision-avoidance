@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Python pickle
+*.pkl
+
+# OpenAI baselines directory
+baselines
