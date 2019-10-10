@@ -21,3 +21,7 @@ python -m baselines.run --alg=deepq --env=CartPole-v0 --load_path=./cartpole_mod
 The first command trains a DQN model and the cartpole environment. This step might take ~20 minutes if you're running it on a CPU.
 
 The the second uses the learned state value function to try to balance the pole on top of the cart. You should see a window pop up with a 2D rendering where the DQN model is trying to balance a pole on top of a cart in real time.
+
+## Running GridWorld environment
+
+After having installed `gym`, go to the repo directory and run `pip install -e gym-ca`. After this, you will be able to create the gridworld gym environment with `gym.make('gym_ca:ca-gridworld-v0')`.
