@@ -1,4 +1,5 @@
 from itertools import count
+from state import AC_State
 
 acts = ['NOOP', 'UP', 'DOWN', 'LEFT', 'RIGHT']
 NUM_ACTIONS = len(acts)
@@ -15,4 +16,25 @@ def a_str(a_int):
 
 
 def act(pos, a, n, m):
-    pass
+    a = a_str(a)
+    x, y = pos
+
+    if a == 'NOOP':
+        return AC_State(x,y)
+    elif a == 'UP':
+        return AC_State(x, y+1) if y+1 < n else pos
+    elif a == 'DOWN':
+        return AC_State(x, y-1) if 0 <= y-1 else pos
+    elif a == 'LEFT':
+        return AC_State(x-1, y) if 0 <= x-1 else pos
+    elif a == 'RIGHT':
+        return AC_State(x+1, y) if x+1 < m else pos
+    else:
+        raise Exception('Invalid action.')
+
+
+def act_obstacles(pos, a, grid):
+    n, m, obstacles = grid
+    new_pos = act(pos, a, n, m)
+
+    return new_pos if new_pos not in obstacles else pos

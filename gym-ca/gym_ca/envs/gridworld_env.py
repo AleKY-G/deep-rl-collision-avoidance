@@ -1,10 +1,12 @@
+from random import randrange
+
 import gym
 import numpy as np
 from gym import error, spaces, utils
 from gym.utils import seeding
 
 import action
-import state
+from state import initial_state, State, NUM_STATES
 
 
 class GridworldEnv(gym.Env):
@@ -15,7 +17,7 @@ class GridworldEnv(gym.Env):
         self.dims = (n, m)
 
         # Define observation and action spaces
-        self.observation_space = spaces.Discrete(state.NUM_STATES)
+        self.observation_space = spaces.Discrete(NUM_STATES)
         self.action_space = spaces.Discrete(action.NUM_ACTIONS)
 
         # Seed environment
@@ -23,7 +25,6 @@ class GridworldEnv(gym.Env):
 
         # Set up the the initial state and time 
         self.reset()
-        
 
     def step(self, a):
         """
@@ -36,9 +37,9 @@ class GridworldEnv(gym.Env):
             a, *self.dims)
         new_intruder_pos = action.act(self.state.intruder, 
             randrange(action.NUM_ACTIONS), *self.dims)
-        new_state = state.State(new_agent_pos, new_intruder_pos)
+        new_state = State(new_agent_pos, new_intruder_pos)
 
-        r = get_reward(new_state)
+        r = self._r(new_state, a)
         done = self.state.agent == self.goal
         
         self.state = new_state
@@ -51,7 +52,7 @@ class GridworldEnv(gym.Env):
 
         Returns the initial state.
         """
-        self.state, self.goal = init_state()
+        self.state, self.goal = initial_state(*self.dims)
         self.t = 0
         return self.state
 
@@ -59,7 +60,23 @@ class GridworldEnv(gym.Env):
         """
         Render state of the environment to the screen.
         """
-        pass
+        n, m = self.dims
+        render_str = ['']
+        own, intr = self.state
+
+        for row in range(n):
+            for col in range(m):
+                if (col, row) == own:
+                    render_str.append('O')
+                elif(col, row) == intr:
+                    render_str.append('I')
+                else:
+                    render_str.append('*')
+            render_str.append('\n')
+
+        render_str = ' '.join(render_str)
+        print(render_str)
+
 
     def _r(self, new_state, action):
         """
@@ -76,4 +93,3 @@ class GridworldEnv(gym.Env):
             r += -10
 
         return r
-
