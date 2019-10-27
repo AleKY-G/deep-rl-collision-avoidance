@@ -5,20 +5,24 @@ import numpy as np
 from gym import error, spaces, utils
 from gym.utils import seeding
 
-import action
-from state import initial_state, State, NUM_STATES
+from .state import NUM_STATES, State, initial_state, state_to_obs
+from .action import NUM_ACTIONS, act
 
 
 class GridworldEnv(gym.Env):
 
-    def __init__(self, n, m, seed=0):
+    def __init__(self, n=10, m=10, seed=0):
         super(GridworldEnv, self).__init__()
 
         self.dims = (n, m)
 
         # Define observation and action spaces
-        self.observation_space = spaces.Discrete(NUM_STATES)
-        self.action_space = spaces.Discrete(action.NUM_ACTIONS)
+        self.observation_space = spaces.Box(
+            low=np.array([0, 0, 0, 0]), 
+            high=np.array([m, n, m, n]),
+            dtype=np.float32
+        )
+        self.action_space = spaces.Discrete(NUM_ACTIONS)
 
         # Seed environment
         np.random.seed(seed)
@@ -33,18 +37,19 @@ class GridworldEnv(gym.Env):
         Return the new state, the reward, and whether 
         the episode is over.
         """
-        new_agent_pos = action.act(self.state.agent, 
+        new_agent_pos = act(self.state.agent, 
             a, *self.dims)
-        new_intruder_pos = action.act(self.state.intruder, 
-            randrange(action.NUM_ACTIONS), *self.dims)
+        new_intruder_pos = act(self.state.intruder, 
+            randrange(NUM_ACTIONS), *self.dims)
         new_state = State(new_agent_pos, new_intruder_pos)
 
         r = self._r(new_state, a)
         done = self.state.agent == self.goal
         
         self.state = new_state
+        obs = state_to_obs(self.state)
 
-        return self.state, r, done, {}
+        return np.array(obs), r, done, {}
 
     def reset(self):
         """
@@ -54,7 +59,7 @@ class GridworldEnv(gym.Env):
         """
         self.state, self.goal = initial_state(*self.dims)
         self.t = 0
-        return self.state
+        return state_to_obs(self.state)
 
     def render(self, mode='human'):
         """

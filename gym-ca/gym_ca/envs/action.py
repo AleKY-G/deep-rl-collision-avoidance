@@ -1,5 +1,6 @@
 from itertools import count
-from state import AC_State
+from .state import AC_State
+
 
 acts = ['NOOP', 'UP', 'DOWN', 'LEFT', 'RIGHT']
 NUM_ACTIONS = len(acts)
