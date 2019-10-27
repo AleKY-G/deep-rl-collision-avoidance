@@ -1,5 +1,6 @@
 from collections import namedtuple
 from .grid import create_grid
+from .fixedgrid import create_grid_predefined, create_obstacle_grid_predefined
 
 
 ac_states = ['x', 'y']
@@ -13,6 +14,12 @@ NUM_STATES = 4
 def initial_state(n, m):
     agent, intruder, goal = create_grid(n, m)
     return State(agent, intruder), goal
+
+def fixed_initial_state(n, m):
+	obstacles = []
+	agent, intruder, goal = create_grid_predefined(n, m)
+	# agent, intruder, goal, obstacles = create_obstacle_grid_predefined(n, m)
+	return State(agent, intruder), goal, obstacles
 
 
 def state_to_obs(s):
