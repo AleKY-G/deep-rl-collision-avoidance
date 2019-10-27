@@ -5,8 +5,8 @@ import numpy as np
 from gym import error, spaces, utils
 from gym.utils import seeding
 
-from .state import NUM_STATES, State, initial_state, state_to_obs
-from .action import NUM_ACTIONS, act
+from .state import NUM_STATES, State, initial_state, state_to_obs, fixed_initial_state
+from .action import NUM_ACTIONS, act, act_intr
 
 
 class GridworldEnv(gym.Env):
@@ -30,7 +30,7 @@ class GridworldEnv(gym.Env):
         # Set up the the initial state and time 
         self.reset()
 
-    def step(self, a):
+    def step(self, a, last_act_intr):
         """
         Advance one timestep, taking an action.
 
@@ -39,8 +39,10 @@ class GridworldEnv(gym.Env):
         """
         new_agent_pos = act(self.state.agent, 
             a, *self.dims)
-        new_intruder_pos = act(self.state.intruder, 
-            randrange(NUM_ACTIONS), *self.dims)
+        # new_intruder_pos = act(self.state.intruder, 
+        #     randrange(NUM_ACTIONS), *self.dims)
+        new_intruder_pos, last_act_intr = act_intr(self.state.intruder, 
+            randrange(NUM_ACTIONS), *self.dims, last_act_intr)
         new_state = State(new_agent_pos, new_intruder_pos)
 
         r = self._r(new_state, a)
@@ -49,7 +51,7 @@ class GridworldEnv(gym.Env):
         self.state = new_state
         obs = state_to_obs(self.state)
 
-        return np.array(obs), r, done, {}
+        return np.array(obs), r, done, {}, last_act_intr
 
     def reset(self):
         """
@@ -57,7 +59,8 @@ class GridworldEnv(gym.Env):
 
         Returns the initial state.
         """
-        self.state, self.goal = initial_state(*self.dims)
+        # self.state, self.goal = initial_state(*self.dims)
+        self.state, self.goal, self.obstacle = fixed_initial_state(*self.dims)
         self.t = 0
         return state_to_obs(self.state)
 
@@ -77,6 +80,8 @@ class GridworldEnv(gym.Env):
                     render_str.append('I')
                 elif (col, row) == self.goal:
                     render_str.append('G')
+                elif (col, row) in self.obstacle:
+                    render_str.append('X')
                 else:
                     render_str.append('*')
             render_str.append('\n')
