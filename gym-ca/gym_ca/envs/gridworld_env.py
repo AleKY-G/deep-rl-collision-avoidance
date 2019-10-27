@@ -73,8 +73,10 @@ class GridworldEnv(gym.Env):
             for col in range(m):
                 if (col, row) == own:
                     render_str.append('O')
-                elif(col, row) == intr:
+                elif (col, row) == intr:
                     render_str.append('I')
+                elif (col, row) == self.goal:
+                    render_str.append('G')
                 else:
                     render_str.append('*')
             render_str.append('\n')
