@@ -6,7 +6,7 @@ from gym import error, spaces, utils
 from gym.utils import seeding
 
 from .state import NUM_STATES, State, initial_state, state_to_obs, fixed_initial_state
-from .action import NUM_ACTIONS, act, act_intr
+from .action import NUM_ACTIONS, NUM_ACTIONS_intr, act, act_intr
 
 
 class GridworldEnv(gym.Env):
@@ -42,8 +42,10 @@ class GridworldEnv(gym.Env):
         # new_intruder_pos = act(self.state.intruder, 
         #     randrange(NUM_ACTIONS), *self.dims)
         new_intruder_pos, last_act_intr = act_intr(self.state.intruder, 
-            randrange(NUM_ACTIONS), *self.dims, last_act_intr)
+            randrange(NUM_ACTIONS_intr), *self.dims, last_act_intr)
         new_state = State(new_agent_pos, new_intruder_pos)
+
+        # print("Here: "+last_act_intr)
 
         r = self._r(new_state, a)
         done = self.state.agent == self.goal
@@ -102,6 +104,7 @@ class GridworldEnv(gym.Env):
 
         # add a negaive reward for collisions
         if new_state.agent == new_state.intruder:
-            r += -10
+            # r += -10
+            r += -50
 
         return r
