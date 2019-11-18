@@ -17,8 +17,8 @@ def initial_state(n, m):
 
 def fixed_initial_state(n, m):
 	obstacles = []
-	agent, intruder, goal = create_grid_predefined(n, m)
-	# agent, intruder, goal, obstacles = create_obstacle_grid_predefined(n, m)
+	# agent, intruder, goal = create_grid_predefined(n, m)
+	agent, intruder, goal, obstacles = create_obstacle_grid_predefined(n, m)
 	return State(agent, intruder), goal, obstacles
 
 
