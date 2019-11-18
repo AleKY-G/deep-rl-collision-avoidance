@@ -47,7 +47,7 @@ class GridworldEnv(gym.Env):
 
         # print("Here: "+last_act_intr)
 
-        r = self._r(new_state, a)
+        r = self._r(new_state, a, self.obstacle)
         done = self.state.agent == self.goal
         
         self.state = new_state
@@ -92,7 +92,7 @@ class GridworldEnv(gym.Env):
         print(render_str)
 
 
-    def _r(self, new_state, action):
+    def _r(self, new_state, action, obstacle):
         """
         Compute reward obtained by transitioning
         to the new state.
@@ -102,8 +102,15 @@ class GridworldEnv(gym.Env):
         # add a negative reward for each timestep
         r += -1
 
-        # add a negaive reward for collisions
+        # add a negaive reward for collisions with intruder
         if new_state.agent == new_state.intruder:
+            # r += -10
+            r += -50
+
+        # add a negaive reward for collisions with obstacle
+        if new_state.agent in obstacle:
+            print(obstacle)
+            print(new_state.agent)
             # r += -10
             r += -50
 
