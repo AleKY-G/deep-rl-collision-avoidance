@@ -120,7 +120,7 @@ def act_intr(pos, a, n, m, a_last):
         if y == n-1:
             new_state = AC_State(m-1, 0)
             a = 'NOOP'
-            print('Reset intruder')
+            # print('Reset intruder')
             break
         elif a == a_backwards:
             a = a_str_intr(randrange(NUM_ACTIONS_intr))
