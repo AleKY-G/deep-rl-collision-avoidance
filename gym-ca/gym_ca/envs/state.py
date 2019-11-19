@@ -1,3 +1,4 @@
+import random
 from collections import namedtuple
 from .grid import create_grid
 from .fixedgrid import create_grid_predefined, create_obstacle_grid_predefined
@@ -9,6 +10,8 @@ State = namedtuple('State', ['agent', 'intruder'])
 Observation = namedtuple('Observation', ['x0', 'y0', 'x1', 'y1'])
 
 NUM_STATES = 4
+
+prob_dropout = .1
 
 
 def initial_state(n, m):
@@ -24,3 +27,7 @@ def fixed_initial_state(n, m):
 
 def state_to_obs(s):
     return Observation(*s[0], *s[1])
+
+
+def decision_dropbout(probability):
+    return random.random() < probability
