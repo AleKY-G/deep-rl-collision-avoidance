@@ -5,7 +5,7 @@ import numpy as np
 from gym import error, spaces, utils
 from gym.utils import seeding
 
-from .state import NUM_STATES, State, initial_state, state_to_obs, fixed_initial_state
+from .state import NUM_STATES, State, initial_state, state_to_obs, fixed_initial_state, prob_dropout, decision_dropbout
 from .action import NUM_ACTIONS, NUM_ACTIONS_intr, act, act_intr
 
 
@@ -30,19 +30,26 @@ class GridworldEnv(gym.Env):
         # Set up the the initial state and time 
         self.reset()
 
-    def step(self, a, last_act_intr):
+    def step(self, a):
         """
         Advance one timestep, taking an action.
 
         Return the new state, the reward, and whether 
         the episode is over.
         """
+
+        # With probability prob_dropout take different action than specified by input argument.
+        if decision_dropbout(prob_dropout):
+            a_old = a
+            while a_old == a:   # make sure that we have different action than intended
+                a = randrange(NUM_ACTIONS)
+
         new_agent_pos = act(self.state.agent, 
             a, *self.dims)
         # new_intruder_pos = act(self.state.intruder, 
         #     randrange(NUM_ACTIONS), *self.dims)
         new_intruder_pos, last_act_intr = act_intr(self.state.intruder, 
-            randrange(NUM_ACTIONS_intr), *self.dims, last_act_intr)
+            randrange(NUM_ACTIONS_intr), *self.dims, self.last_act_intr)
         new_state = State(new_agent_pos, new_intruder_pos)
 
         # print("Here: "+last_act_intr)
@@ -51,9 +58,10 @@ class GridworldEnv(gym.Env):
         done = self.state.agent == self.goal
         
         self.state = new_state
+        self.last_act_intr = last_act_intr
         obs = state_to_obs(self.state)
 
-        return np.array(obs), r, done, {}, last_act_intr
+        return np.array(obs), r, done, {}
 
     def reset(self):
         """
@@ -64,6 +72,7 @@ class GridworldEnv(gym.Env):
         # self.state, self.goal = initial_state(*self.dims)
         self.state, self.goal, self.obstacle = fixed_initial_state(*self.dims)
         self.t = 0
+        self.last_act_intr = 'NOOP'
         return state_to_obs(self.state)
 
     def render(self, mode='human'):
