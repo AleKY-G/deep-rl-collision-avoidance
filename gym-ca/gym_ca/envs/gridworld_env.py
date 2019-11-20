@@ -9,6 +9,7 @@ from gym.utils import seeding
 from .state import (NUM_STATES, State, initial_state, 
     state_to_obs, fixed_initial_state, decision_dropbout)
 from .action import NUM_ACTIONS, NUM_ACTIONS_intr, act, act_intr
+from .intruder_predefinedMotion import act_intr_predefined
 
 
 class GridworldEnv(gym.Env):
@@ -50,8 +51,18 @@ class GridworldEnv(gym.Env):
 
         new_agent_pos = act(self.state.agent, 
             a, *self.dims)
-        new_intruder_pos, last_act_intr = act_intr(self.state.intruder, 
-            randrange(NUM_ACTIONS_intr), *self.dims, self.last_act_intr)
+
+        if not self.intruder_motion:
+            new_intruder_pos, last_act_intr = act_intr(self.state.intruder, 
+                randrange(NUM_ACTIONS_intr), *self.dims, self.last_act_intr)
+            self.last_act_intr = last_act_intr
+        else:
+            if len(self.intruder_motion) == self.step_counter_intruder:
+                self.step_counter_intruder = 0     # reset if end of list is reached
+            new_intruder_pos = act_intr_predefined(self.state.intruder, 
+                self.intruder_motion[self.step_counter_intruder], *self.dims)
+            self.step_counter_intruder += 1
+
         new_state = State(new_agent_pos, new_intruder_pos)
 
 
@@ -59,7 +70,6 @@ class GridworldEnv(gym.Env):
         done = self.state.agent == self.goal
         
         self.state = new_state
-        self.last_act_intr = last_act_intr
         obs = state_to_obs(self.state)
 
         return np.array(obs), r, done, {}
@@ -71,14 +81,23 @@ class GridworldEnv(gym.Env):
 
         Returns the initial state.
         """
+        path_predefined_intruderMotion = []
+
+        # Path to text file that defines intruder encounter behavior
+        path_predefined_intruderMotion = 'init-encounters/validation-encounters/guard_goal.txt'
+
         # self.state, self.goal = initial_state(*self.dims)
-        self.state, self.goal, self.obstacle = fixed_initial_state(*self.dims)
+        self.state, self.goal, self.obstacle, self.intruder_motion = fixed_initial_state(*self.dims, path_predefined_intruderMotion)
 
         # Record number of collisions and episode timestep
         self.t = 0
         self.num_mac = 0
 
-        self.last_act_intr = 'NOOP'
+        if not path_predefined_intruderMotion:
+            self.last_act_intr = 'NOOP'
+        else:
+            self.step_counter_intruder = 0
+
         return state_to_obs(self.state)
 
 
