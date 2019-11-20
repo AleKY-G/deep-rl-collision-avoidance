@@ -2,6 +2,7 @@ import random
 from collections import namedtuple
 from .grid import create_grid
 from .fixedgrid import create_grid_predefined, create_obstacle_grid_predefined
+from .intruder_predefinedMotion import get_intruder_info
 
 
 ac_states = ['x', 'y']
@@ -16,11 +17,18 @@ def initial_state(n, m):
     agent, intruder, goal = create_grid(n, m)
     return State(agent, intruder), goal
 
-def fixed_initial_state(n, m):
+def fixed_initial_state(n, m, path=[]):
 	obstacles = []
+	intruder_motion = []
 	# agent, intruder, goal = create_grid_predefined(n, m)
 	agent, intruder, goal, obstacles = create_obstacle_grid_predefined(n, m)
-	return State(agent, intruder), goal, obstacles
+
+	# Load predefined intruder motion if necessary
+	intruder_predefined, intruder_motion = get_intruder_info(path)
+	if intruder_predefined:
+		intruder = intruder_predefined
+
+	return State(agent, intruder), goal, obstacles, intruder_motion
 
 
 def state_to_obs(s):
