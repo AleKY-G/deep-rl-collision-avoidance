@@ -85,19 +85,6 @@ def act_intr(pos, a, n, m, a_last):
     a = a_str_intr(a)
     x, y = pos
 
-    # if a == 'NOOP':
-    #     return AC_State(x,y), a
-    # elif a == 'UP':
-    #     return AC_State(x, y+1) if y+1 < n else pos, a
-    # elif a == 'DOWN':
-    #     return AC_State(x, y-1) if 0 <= y-1 else pos, a
-    # elif a == 'LEFT':
-    #     return AC_State(x-1, y) if 0 <= x-1 else pos, a
-    # elif a == 'RIGHT':
-    #     return AC_State(x+1, y) if x+1 < m else pos, a
-    # else:
-    #     raise Exception('Invalid action.')
-
     if a_last == 'UP':
         a_backwards = 'DOWN'
     elif a_last == 'DOWN':
@@ -109,12 +96,6 @@ def act_intr(pos, a, n, m, a_last):
     elif a_last == 'NOOP':
         a_backwards = 'NOOP'
 
-
-    # print('hello')
-    # print(pos)
-    # print('a_last: '+a_last)
-    # print('a: '+a)
-    # print(a == a_backwards)
     while True:
         # print(a)
         if y == n-1:
@@ -128,13 +109,13 @@ def act_intr(pos, a, n, m, a_last):
             if a == 'NOOP':
                 new_state = AC_State(x,y)
                 break
-            elif a == 'DOWN':
+            elif a == 'UP':
                 if y+1 < n:
                     new_state = AC_State(x, y+1)
                     break
                 else:
                     a = a_str_intr(randrange(NUM_ACTIONS_intr))
-            elif a == 'UP':
+            elif a == 'DOWN':
                 if 0 <= y-1:
                     new_state = AC_State(x, y-1)
                     break
@@ -155,10 +136,6 @@ def act_intr(pos, a, n, m, a_last):
             else:
                 raise Exception('Invalid action.')
                 break
-
-    # print("new_state: "+str(new_state))
-    # print("Now: "+a)
-    # print('world')
 
     return new_state, a
 
