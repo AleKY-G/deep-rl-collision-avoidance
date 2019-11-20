@@ -71,6 +71,7 @@ class GridworldEnv(gym.Env):
         
         self.state = new_state
         obs = state_to_obs(self.state)
+        self.last_act_intr = last_act_intr
 
         return np.array(obs), r, done, {}
 
