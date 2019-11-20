@@ -54,7 +54,6 @@ class GridworldEnv(gym.Env):
 
         new_agent_pos = act(self.state.agent, 
             a, *self.dims)
-<<<<<<< HEAD
         
         if self.intruder_actions is None:
             next_act_int = randrange(NUM_ACTIONS_intr)
@@ -64,20 +63,6 @@ class GridworldEnv(gym.Env):
         
         new_intruder_pos, last_act_intr = act_intr(self.state.intruder, 
             next_act_int, *self.dims, self.last_act_intr)
-=======
-
-        if not self.intruder_motion:
-            new_intruder_pos, last_act_intr = act_intr(self.state.intruder, 
-                randrange(NUM_ACTIONS_intr), *self.dims, self.last_act_intr)
-            self.last_act_intr = last_act_intr
-        else:
-            if len(self.intruder_motion) == self.step_counter_intruder:
-                self.step_counter_intruder = 0     # reset if end of list is reached
-            new_intruder_pos = act_intr_predefined(self.state.intruder, 
-                self.intruder_motion[self.step_counter_intruder], *self.dims)
-            self.step_counter_intruder += 1
-
->>>>>>> 0cb25dedd5a4bd27d4c5ecb3e342b4e6567ff595
         new_state = State(new_agent_pos, new_intruder_pos)
 
 
