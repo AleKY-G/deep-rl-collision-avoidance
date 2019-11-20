@@ -13,7 +13,7 @@ from .action import NUM_ACTIONS, NUM_ACTIONS_intr, act, act_intr
 
 class GridworldEnv(gym.Env):
 
-    def __init__(self, n=10, m=10, prob_dropout=0, seed=0):
+    def __init__(self, n=10, m=10, prob_dropout=0, intruder_actions=None, seed=0):
         super(GridworldEnv, self).__init__()
 
         self.dims = (n, m)
@@ -31,6 +31,9 @@ class GridworldEnv(gym.Env):
         # Seed environment
         np.random.seed(seed)
         random.seed(seed)
+
+        # Intruder predifined actions
+        self.intruder_actions = intruder_actions
 
         # Set up the the initial state and time 
         self.reset()
@@ -50,8 +53,15 @@ class GridworldEnv(gym.Env):
 
         new_agent_pos = act(self.state.agent, 
             a, *self.dims)
+        
+        if self.intruder_actions is None:
+            next_act_int = randrange(NUM_ACTIONS_intr)
+        else:
+            n = len(self.intruder_actions)
+            next_act_int = self.intruder_actions[self.t % n]
+        
         new_intruder_pos, last_act_intr = act_intr(self.state.intruder, 
-            randrange(NUM_ACTIONS_intr), *self.dims, self.last_act_intr)
+            next_act_int, *self.dims, self.last_act_intr)
         new_state = State(new_agent_pos, new_intruder_pos)
 
 
