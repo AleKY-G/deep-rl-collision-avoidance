@@ -1,3 +1,4 @@
+import random
 from random import randrange
 
 import gym
@@ -5,13 +6,14 @@ import numpy as np
 from gym import error, spaces, utils
 from gym.utils import seeding
 
-from .state import NUM_STATES, State, initial_state, state_to_obs, fixed_initial_state, prob_dropout, decision_dropbout
+from .state import (NUM_STATES, State, initial_state, 
+    state_to_obs, fixed_initial_state, decision_dropbout)
 from .action import NUM_ACTIONS, NUM_ACTIONS_intr, act, act_intr
 
 
 class GridworldEnv(gym.Env):
 
-    def __init__(self, n=10, m=10, seed=0):
+    def __init__(self, n=10, m=10, prob_dropout=0, seed=0):
         super(GridworldEnv, self).__init__()
 
         self.dims = (n, m)
@@ -24,11 +26,15 @@ class GridworldEnv(gym.Env):
         )
         self.action_space = spaces.Discrete(NUM_ACTIONS)
 
+        self.prob_dropout = prob_dropout
+
         # Seed environment
         np.random.seed(seed)
+        random.seed(seed)
 
         # Set up the the initial state and time 
         self.reset()
+
 
     def step(self, a):
         """
@@ -38,21 +44,16 @@ class GridworldEnv(gym.Env):
         the episode is over.
         """
 
-        # With probability prob_dropout take different action than specified by input argument.
-        if decision_dropbout(prob_dropout):
-            a_old = a
-            while a_old == a:   # make sure that we have different action than intended
-                a = randrange(NUM_ACTIONS)
+        # With probability prob_dropout take random action.
+        if decision_dropbout(self.prob_dropout):
+            a = randrange(NUM_ACTIONS)
 
         new_agent_pos = act(self.state.agent, 
             a, *self.dims)
-        # new_intruder_pos = act(self.state.intruder, 
-        #     randrange(NUM_ACTIONS), *self.dims)
         new_intruder_pos, last_act_intr = act_intr(self.state.intruder, 
             randrange(NUM_ACTIONS_intr), *self.dims, self.last_act_intr)
         new_state = State(new_agent_pos, new_intruder_pos)
 
-        # print("Here: "+last_act_intr)
 
         r = self._r(new_state, a, self.obstacle)
         done = self.state.agent == self.goal
@@ -63,6 +64,7 @@ class GridworldEnv(gym.Env):
 
         return np.array(obs), r, done, {}
 
+
     def reset(self):
         """
         Reset state of environment to initial state.
@@ -71,9 +73,14 @@ class GridworldEnv(gym.Env):
         """
         # self.state, self.goal = initial_state(*self.dims)
         self.state, self.goal, self.obstacle = fixed_initial_state(*self.dims)
+
+        # Record number of collisions and episode timestep
         self.t = 0
+        self.num_mac = 0
+
         self.last_act_intr = 'NOOP'
         return state_to_obs(self.state)
+
 
     def render(self, mode='human'):
         """
@@ -111,12 +118,12 @@ class GridworldEnv(gym.Env):
         # add a negative reward for each timestep
         r += -1
 
-        # add a negaive reward for collisions with intruder
+        # add a negative reward for collisions with intruder
         if new_state.agent == new_state.intruder:
             # r += -10
             r += -50
 
-        # add a negaive reward for collisions with obstacle
+        # add a negative reward for collisions with obstacle
         if new_state.agent in obstacle:
             print(obstacle)
             print(new_state.agent)

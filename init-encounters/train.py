@@ -1,7 +1,6 @@
 import gym
 import tensorflow as tf
-# from baselines import deepq
-import deepq_mod
+from baselines import deepq
 
 from time import time
 import numpy as np

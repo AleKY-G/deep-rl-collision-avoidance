@@ -11,8 +11,6 @@ Observation = namedtuple('Observation', ['x0', 'y0', 'x1', 'y1'])
 
 NUM_STATES = 4
 
-prob_dropout = .1
-
 
 def initial_state(n, m):
     agent, intruder, goal = create_grid(n, m)
