@@ -110,7 +110,7 @@ class GridworldEnv(gym.Env):
         render_str = ['']
         own, intr = self.state
 
-        for row in range(n):
+        for row in range(n-1, -1, -1):
             for col in range(m):
                 if (col, row) == own:
                     render_str.append('O')
