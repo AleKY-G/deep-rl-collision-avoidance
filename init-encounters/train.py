@@ -8,7 +8,7 @@ import numpy as np
 
 def train(env_name='gym_ca:ca-gridworld-v0', steps=2e4):
     env = gym.make(env_name)
-    policy = deepq_mod.learn(
+    policy = deepq.learn(
         env,
         network='mlp',
         lr=1e-3,

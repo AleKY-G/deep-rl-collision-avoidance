@@ -8,7 +8,7 @@ import time
 
 def run(load_path, env_name='gym_ca:ca-gridworld-v0'):
     env = gym.make(env_name)
-    policy = deepq_mod.learn(
+    policy = deepq.learn(
         env, 
         network='mlp',
         num_layers=2,
