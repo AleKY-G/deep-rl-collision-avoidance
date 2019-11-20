@@ -8,19 +8,19 @@ def select_action(x, y):
         output = random.choice(actions)
         return output
     elif ((x == 0) & (y == 0)):
-        actions = ["R","D"]
-        output = random.choice(actions)
-        return output
-    elif ((x == 0) & (y == Ny-1)):
         actions = ["R","U"]
         output = random.choice(actions)
         return output
+    elif ((x == 0) & (y == Ny-1)):
+        actions = ["R","D"]
+        output = random.choice(actions)
+        return output
     elif ((x == Nx-1) & (y == 0)):
-        actions = ["L","D"]
+        actions = ["L","U"]
         output = random.choice(actions)
         return output
     elif ((x == Nx-1) & (y == Ny-1)):
-        actions = ["L","U"]
+        actions = ["L","D"]
         output = random.choice(actions)
         return output
     elif x == 0:
@@ -32,11 +32,11 @@ def select_action(x, y):
         output = random.choice(actions)
         return output
     elif y == 0:
-        actions = ["L","R","D"]
+        actions = ["L","R","U"]
         output = random.choice(actions)
         return output
     elif y == Ny-1:
-        actions = ["L","R","U"]
+        actions = ["L","R","D"]
         output = random.choice(actions)
         return output
 
@@ -60,9 +60,9 @@ def createEncounter(Nx, Ny, filename, nsteps_per_encounter):
         elif output == "R":
             x = x + 1
         elif output == "U":
-            y = y - 1
-        elif output == "D":
             y = y + 1
+        elif output == "D":
+            y = y - 1
         # Output chosen action to file
         intruder_encounter_file.write(str(output) + "\n")
   
