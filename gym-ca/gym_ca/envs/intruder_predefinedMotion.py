@@ -4,7 +4,7 @@ from itertools import count
 ac_states = ['x', 'y']
 AC_State = namedtuple('AC_State', ac_states)
 
-acts_int = ['U', 'D', 'L', 'R']
+acts_int = ['NOOP','U', 'D', 'L', 'R']
 a_str_to_int_intr = dict(zip(acts_int, count()))
 a_int_to_str_intr = dict(zip(count(), acts_int))
 
@@ -53,9 +53,9 @@ def act_intr_predefined(pos, a, n, m):
 
     if a == 'NOOP':
         return AC_State(x,y)
-    elif a == 'U':
-        return AC_State(x, y-1) if 0 <= y-1 else pos
     elif a == 'D':
+        return AC_State(x, y-1) if 0 <= y-1 else pos
+    elif a == 'U':
         return AC_State(x, y+1) if y+1 < n else pos
     elif a == 'L':
         return AC_State(x-1, y) if 0 <= x-1 else pos
