@@ -24,12 +24,8 @@ def create_obstacle_grid_predefined(n, m):
     """
     assert n > 3 and m > 3
 
-    mid = (n/2, m/2)
     x0, x1, y0, y1 = int(m/2), int(m/2) + 1, int(n/2), int(n/2) + 1
-    # x0, y0 = int(m/2), int(m/2)
-
     obstacles = [(x0, y0), (x0, y1), (x1, y0), (x1, y1)]
-    # obstacles = (x0, y0)
 
     agent, intruder, goal = create_grid_predefined(n, m)
 

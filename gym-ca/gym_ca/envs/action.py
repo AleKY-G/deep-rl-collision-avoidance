@@ -46,40 +46,6 @@ def act(pos, a, n, m):
     else:
         raise Exception('Invalid action.')
 
-    # flag_backward = True
-    # while flag_backward:
-    #     if a == 'NOOP':
-    #         new_state = AC_State(x,y)
-    #         flag_backward = False
-    #     elif a == 'UP':
-    #         if y+1 < n:
-    #             new_state = AC_State(x, y+1)
-    #             flag_backward = False
-    #         else:
-    #             a = a_str(randrange(NUM_ACTIONS))
-    #     elif a == 'DOWN':
-    #         if 0 <= y-1:
-    #             new_state = AC_State(x, y-1)
-    #             flag_backward = False
-    #         else:
-    #             a = a_str(randrange(NUM_ACTIONS))
-    #     elif a == 'LEFT':
-    #         if 0 <= x-1:
-    #             new_state = AC_State(x-1, y)
-    #             flag_backward = False
-    #         else:
-    #             a = a_str(randrange(NUM_ACTIONS))
-    #     elif a == 'RIGHT':
-    #         if x+1 < m:
-    #             new_state = AC_State(x+1, y)
-    #             flag_backward = False
-    #         else:
-    #             a = a_str(randrange(NUM_ACTIONS))
-    #     else:
-    #         raise Exception('Invalid action.')
-
-    # return new_state
-
 
 def act_intr(pos, a, n, m, a_last):
     a = a_str_intr(a)

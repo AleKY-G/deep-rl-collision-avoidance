@@ -1,5 +1,6 @@
 from collections import namedtuple
 from itertools import count
+from .action import a_int
 
 ac_states = ['x', 'y']
 AC_State = namedtuple('AC_State', ac_states)

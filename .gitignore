@@ -108,3 +108,8 @@ venv.bak/
 
 # OpenAI baselines directory
 baselines
+
+# Data files
+*.txt
+*.png
+
