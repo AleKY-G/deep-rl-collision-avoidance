@@ -9,6 +9,7 @@ from mdp.state import (get_obs_space, State, state_to_obs,
 from mdp.action import get_act_space
 from mdp.transition import advance_ac
 from mdp.reward import reward
+from mdp.encounter import mc_encounter
 
 
 class CAEnv(Env):
@@ -82,7 +83,7 @@ class CAEnv(Env):
         # Reset state and observation
         tca = randrange(*self.tca)
         self.state, self.int_acts = \
-            sample_encounter(tca)
+            mc_encounter(tca)
         self.obs = state_to_obs(self.state)
         
         # Return initial observation

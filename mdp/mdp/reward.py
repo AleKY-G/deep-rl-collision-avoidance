@@ -4,7 +4,7 @@ NMAC_R = 500
 rw_vals = {
     'nmac': -50,
     'alert': -.1,
-    'distance': 1e3
+    'distance': 1e-3
 }
 
 
@@ -21,6 +21,8 @@ def reward(obs, obs_new, a):
 
     # Shaping reward
     r += rw_vals['distance'] * shaping_rw(obs, obs_new)
+
+    return r
 
 
 def is_nmac(obs_new):

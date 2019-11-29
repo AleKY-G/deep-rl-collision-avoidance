@@ -12,7 +12,7 @@ ac_vars = ['x', 'y', 'phi', 'speed', 'd_phi']
 obs_vars = ['r', 'theta_x', 'theta_y', 
             'psi_x', 'psi_y', 'sp0', 'sp1',
             'd_phi0', 'd_phi1', 'prev_a']
-state_vars = ['own', 'int', 'prev_a']
+state_vars = ['ac0', 'ac1', 'prev_a']
 
 AC = namedtuple('AC', ac_vars)
 Observation = namedtuple('Observation', obs_vars)
