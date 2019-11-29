@@ -34,7 +34,7 @@ class CAEnv(Env):
         self.int_acts = None
         
         # Time of closest approach interval
-        self.tca = (50, 100)
+        self.tca = (35, 50)
         
         # Define encounter limits
         self.max_r = get_var_interval('r')[1]
