@@ -46,6 +46,10 @@ gym_obs_space = spaces.Box(
 )
 
 
+def get_var_interval(var):
+    return obs_var_interval[var]
+
+
 def get_obs_space():
     return gym_obs_space
 

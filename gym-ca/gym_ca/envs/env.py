@@ -4,9 +4,12 @@ from random import randrange
 import numpy as np
 from gym import Env
 
-from mdp.state import get_obs_space, State, state_to_obs
+from mdp.state import (get_obs_space, State, state_to_obs,
+                       get_var_interval, process_obs)
 from mdp.action import get_act_space
 from mdp.transition import advance_ac
+from mdp.reward import reward
+
 
 class CAEnv(Env):
 
@@ -33,7 +36,7 @@ class CAEnv(Env):
         self.tca = (50, 100)
         
         # Define encounter limits
-        self.max_r = 25000
+        self.max_r = get_var_interval('r')[1]
 
 
     def step(self, a):
@@ -47,15 +50,15 @@ class CAEnv(Env):
         own_st_new = advance_ac(self.state.ac0, a)
         
         # Advance intruder
-        a_int = next(self.enc_gen)
+        a_int = next(self.int_acts)
         int_st_new = advance_ac(self.state.ac1, a_int)
         
         # Make new state and observation
         st_new = State(own_st_new, int_st_new, a)
-        obs_new = state.state_to_obs(st_new)
+        obs_new = state_to_obs(st_new)
         
         # Calculate reward
-        rw = reward.reward(self.obs, obs_new, a)
+        rw = reward(self.obs, obs_new, a)
         
         # Update variables and return
         self.state = st_new
