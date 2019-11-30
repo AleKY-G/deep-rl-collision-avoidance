@@ -9,7 +9,7 @@ from mdp.transition import advance_ac
 from mdp.reward import NMAC_R
 
 
-def mc_encounter(tca, avg_maneuver_len=15, p_nmac=.1):
+def mc_encounter(p_t, tca, p_nmac=.1):
     # Make state transition matrix
     p_self = (avg_maneuver_len - 1) / avg_maneuver_len
     p_trans = (1 - p_self) / (NUM_A - 1)
@@ -54,6 +54,35 @@ def mc_encounter(tca, avg_maneuver_len=15, p_nmac=.1):
     st = State(ac0, ac1, prev_a)
 
     return st, action_generator(p_t, int_acts)
+
+
+def random_act_encounter(tca, p_nmac=.1):
+    p_t = 1 / NUM_A * np.ones((NUM_A, NUM_A))
+
+    return mc_encounter(p_t, tca, p_nmac=.1)
+
+
+def sticky_act_encounter(tca, p_nmac=.1, avg_maneuver_len=15):
+    p_self = (avg_maneuver_len - 1) / avg_maneuver_len
+    p_trans = (1 - p_self) / (NUM_A - 1)
+
+    p_t = ((p_self - p_trans) * np.identity(NUM_A)
+        + p_trans * np.ones((NUM_A, NUM_A)))
+
+    return mc_encounter(p_t, tca, p_nmac=.1)
+
+
+def single_act_encounter(tca, p_nmac=.1, avg_maneuver_len=25):
+    p_t = np.zeros((NUM_A, NUM_A))
+    p_t[0,0] = 1
+
+    p_self = 1 - 1 / avg_maneuver_len
+
+    for i in range(NUM_A):
+        p_t[i,i] = p_self
+        p_t[i,0] = 1 - p_self
+
+    return mc_encounter(p_t, tca, p_nmac=.1)
 
 
 def action_generator(p_t, init_acts=[]):
