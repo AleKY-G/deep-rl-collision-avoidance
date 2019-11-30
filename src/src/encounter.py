@@ -3,20 +3,13 @@ from math import pi, sin, cos
 
 import numpy as np
 
-from mdp.action import NUM_A, a_int
-from mdp.state import get_var_interval, AC, State
-from mdp.transition import advance_ac
-from mdp.reward import NMAC_R
+from src.mdp.action import NUM_A, a_int
+from src.mdp.state import get_var_interval, AC, State
+from src.mdp.transition import advance_ac
+from src.mdp.reward import NMAC_R
 
 
 def mc_encounter(p_t, tca, p_nmac=.1):
-    # Make state transition matrix
-    p_self = (avg_maneuver_len - 1) / avg_maneuver_len
-    p_trans = (1 - p_self) / (NUM_A - 1)
-
-    p_t = ((p_self - p_trans) * np.identity(NUM_A)
-        + p_trans * np.ones((NUM_A, NUM_A)))
-
     # Initialize ownship and intruder state
     x0, y0, phi0, sp0, d_phi0 = \
         0, 0, 0, uniform(*get_var_interval('sp0')), 0

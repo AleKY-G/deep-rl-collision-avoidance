@@ -4,8 +4,8 @@ from math import atan2
 from gym import spaces
 import numpy as np
 
-from mdp.util import norm2, angle_parts
-from mdp.action import TURN_LIM, NUM_A
+from src.util import norm2, angle_parts
+from src.mdp.action import TURN_LIM, NUM_A
 
 
 ac_vars = ['x', 'y', 'phi', 'speed', 'd_phi']

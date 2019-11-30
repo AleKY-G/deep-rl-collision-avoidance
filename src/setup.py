@@ -1,6 +1,6 @@
 from setuptools import setup
 
 setup(
-    name='mdp',
-    version='0.0.1'
+    name='src',
+    version='0.1.0'
 )

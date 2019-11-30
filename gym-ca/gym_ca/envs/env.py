@@ -4,17 +4,17 @@ from random import randrange
 import numpy as np
 from gym import Env
 
-from mdp.state import (get_obs_space, State, state_to_obs,
+from src.mdp.state import (get_obs_space, State, state_to_obs,
                        get_var_interval, process_obs)
-from mdp.action import get_act_space
-from mdp.transition import advance_ac
-from mdp.reward import reward
-from mdp.encounter import mc_encounter
+from src.mdp.action import get_act_space
+from src.mdp.transition import advance_ac
+from src.mdp.reward import reward
+from src.encounter import (sticky_act_encounter, 
+    random_act_encounter, single_act_encounter)
 
 
 class CAEnv(Env):
-
-    def __init__(self, seed=0):
+    def __init__(self, encounter_gen_fun=sticky_act_encounter, seed=0):
         super(CAEnv, self).__init__()
 
         # Define observation and action spaces
@@ -31,6 +31,7 @@ class CAEnv(Env):
         self.t = None
         
         # Intruder action generator
+        self.encounter_gen_fun = encounter_gen_fun
         self.int_acts = None
         
         # Time of closest approach interval
@@ -83,7 +84,7 @@ class CAEnv(Env):
         # Reset state and observation
         tca = randrange(*self.tca)
         self.state, self.int_acts = \
-            mc_encounter(tca)
+            self.encounter_gen_fun(tca)
         self.obs = state_to_obs(self.state)
         
         # Return initial observation
