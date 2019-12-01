@@ -10,7 +10,7 @@ from src.mdp.action import get_act_space
 from src.mdp.transition import advance_ac
 from src.mdp.reward import reward
 from src.encounter import (sticky_act_encounter, 
-    random_act_encounter, single_act_encounter)
+    random_act_encounter, single_act_encounter, no_act_encounter)
 
 
 class CAEnv(Env):
