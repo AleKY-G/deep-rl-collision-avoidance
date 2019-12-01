@@ -55,6 +55,12 @@ def random_act_encounter(tca, p_nmac=.1):
     return mc_encounter(p_t, tca, p_nmac=.1)
 
 
+def no_act_encounter(tca, p_nmac=.1):
+    p_t = np.identity(NUM_A)
+
+    return mc_encounter(p_t, tca, p_nmac=.1)
+
+
 def sticky_act_encounter(tca, p_nmac=.1, avg_maneuver_len=15):
     p_self = (avg_maneuver_len - 1) / avg_maneuver_len
     p_trans = (1 - p_self) / (NUM_A - 1)
