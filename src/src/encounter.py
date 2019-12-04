@@ -1,4 +1,4 @@
-from random import uniform, randrange, choices
+from random import uniform, randrange, choices, choice
 from math import pi, sin, cos
 
 import numpy as np
@@ -82,6 +82,15 @@ def single_act_encounter(tca, p_nmac=.1, avg_maneuver_len=25):
         p_t[i,0] = 1 - p_self
 
     return mc_encounter(p_t, tca, p_nmac=.1)
+
+
+def validation_encounter(tca, p_nmac=.2):
+    possible_funs = [random_act_encounter, no_act_encounter, 
+        sticky_act_encounter, single_act_encounter]
+    fun = choice(possible_funs)
+
+    return fun(tca, p_nmac=p_nmac)
+    
 
 
 def action_generator(p_t, init_acts=[]):

@@ -1,48 +1,64 @@
 from pathlib import Path
+from time import time
 
-from stable_baselines.deepq.policies import MlpPolicy
-from stable_baselines.common.vec_env import DummyVecEnv
-from stable_baselines import DQN
+import tensorflow as tf
+from baselines import deepq
 
 from gym_ca.envs import CAEnv
+from src.mdp.reward import GAMMA
+from src.encounter import (random_act_encounter, no_act_encounter, 
+    sticky_act_encounter, single_act_encounter)
+import src
 
 
-save_dir = Path('../models')
-
-
-class CAPolicy(MlpPolicy):
-    def __init__(self, *args, layers=2*[32], **kwargs):
-        super(CAPolicy, self).__init__(*args, **kwargs,
-                                       layers=layers)
+save_dir = Path(src.__file__).parent / 'models'
 
 
 def train(model_name='model'):
-    env = CAEnv()
-    env = DummyVecEnv([lambda: env])
+    env = CAEnv(encounter_gen_fun=random_act_encounter, p_nmac=.1)
+    model_dir = save_dir / model_name
 
     hyperparams = {
+        'network': 'mlp',
+        'total_timesteps': int(1e5),
+        'lr': 5e-4,
         'prioritized_replay': True,
-        'buffer_size': int(5e4),
-        'verbose': 1,
-        'learning_starts': 0
+        'buffer_size': int(3e4),
+        'learning_starts': 1000,
+        'batch_size': 64,
+        'exploration_fraction': .3,
+        'exploration_final_eps': .01,
+        'target_network_update_freq': 500,
+        'checkpoint_freq': 5000,
+        'checkpoint_path': model_dir
+        'print_freq': 20,
+        'gamma': GAMMA,
+        'seed': 0,
+        'num_layers': 3,
+        'num_hidden': 64,
+        'activation': tf.nn.relu
     }
 
-    learn_hyperparams = {
-        'log_interval': 50,
-        'total_timesteps': int(1e5)
-    }
+    policy, q_vals = deepq.learn(env, **hyperparams)
+    policy.save(model_dir / f'{model_name}.pkl')
 
-    model = DQN(CAPolicy, env, **hyperparams)
-    model.learn(**learn_hyperparams)
-    model.save(save_dir / model_name)
-
-    return model
+    return policy
 
 
 def load(model_name):
-    model = DQN.load(save_dir / model_name)
+    env = CAEnv()
 
-    return model
+    policy, _ = deepq.learn(
+        env,
+        network='mlp',
+        num_layers=3,
+        num_hidden=64,
+        activation=tf.nn.relu,
+        total_timesteps=0,
+        load_path=save_dir / model_name
+    )
+
+    return policy
 
 
 if __name__ == '__main__':

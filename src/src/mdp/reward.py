@@ -1,10 +1,13 @@
-from src.mdp.action import a_int
+from src.mdp.action import a_int, a_str
 
 NMAC_R = 500
+GAMMA = .99
+
 rw_vals = {
-    'nmac': -50,
+    'nmac': -10,
     'alert': -.1,
-    'distance': 1e-3
+    'reversal': -.3,
+    'distance': 0
 }
 
 
@@ -18,6 +21,10 @@ def reward(obs, obs_new, a):
     # Penalize alerts
     if is_alert(a):
         r += rw_vals['alert']
+
+    # Penalize reversal
+    if is_reversal(obs.prev_a, a):
+        r += rw_vals['reversal']
 
     # Shaping reward
     r += rw_vals['distance'] * shaping_rw(obs, obs_new)
@@ -33,5 +40,16 @@ def is_alert(a):
     return a != a_int('NOOP')
 
 
+def is_reversal(a_prev, a):
+    a_prev, a = a_str(a_prev), a_str(a)
+
+    return ((a_prev == 'RIGHT' and a == 'LEFT') 
+        or (a_prev == 'LEFT' and a == 'RIGHT'))
+
+
+def is_alert_start(a_prev, a):
+    return (not is_alert(a_prev)) and is_alert(a)
+
+
 def shaping_rw(obs, obs_new):
-    return obs_new.r - obs.r
+    return GAMMA * obs_new.r - obs.r

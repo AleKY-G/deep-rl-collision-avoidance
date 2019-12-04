@@ -36,3 +36,9 @@ def a_str(a_int):
 
 def a_rate(a_int):
     return a_to_rate[a_str(a_int)]
+
+def is_left(a_int):
+    return a_str(a_int) == 'LEFT'
+
+def is_right(a_int):
+    return a_str(a_int) == 'RIGHT'

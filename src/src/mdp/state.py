@@ -20,7 +20,7 @@ State = namedtuple('State', state_vars)
 
 # Observation variable value interval
 obs_var_interval = {
-    'r': (0, 25000),
+    'r': (0, 35000),
     'theta_x': (-1, 1),
     'theta_y': (-1, 1),
     'psi_x': (-1, 1),
