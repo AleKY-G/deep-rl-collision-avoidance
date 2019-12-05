@@ -120,7 +120,7 @@ class ValCAEnv(CAEnv):
     def __init__(self, val_encs, seed=0):
         self.val_encs = val_encs
         self.i = 0
-        self.max_t = 500
+        self.max_t = 250
         super(ValCAEnv, self).__init__(seed=seed)
 
     def reset(self):

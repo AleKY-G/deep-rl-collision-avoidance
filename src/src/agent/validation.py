@@ -55,6 +55,7 @@ def collect_encounter_data(encounter_set, model_name):
 
         all_encs.append(enc_info)
 
+
     return all_encs
 
 
@@ -66,12 +67,12 @@ def extract_encounter_metrics(encounter_data):
     - Proportion of episodes with alerts.
     - Proportion of episodes with reversal.
     """
-    for step_info in encounter_data:
-        nmac = False
-        alert = False
-        reversal = False
-        segments = 0
+    nmac = False
+    alert = False
+    reversal = False
+    segments = 0
 
+    for step_info in encounter_data:
         ac0, a0, ac1, a1, obs = step_info
 
         # NMAC

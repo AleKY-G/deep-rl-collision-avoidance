@@ -20,10 +20,12 @@ save_dir = Path(src.__file__).parent / 'models'
 def train(model_name, 
           p_nmac=.1, 
           encounter_gen_fun=random_act_encounter, 
-          shaping_coeff=0):
+          shaping_coeff=0,
+          seed=0):
     env = CAEnv(encounter_gen_fun=encounter_gen_fun, 
                 p_nmac=p_nmac, 
-                shaping_coeff=shaping_coeff)
+                shaping_coeff=shaping_coeff,
+                seed=seed)
     model_dir = save_dir / model_name
 
     # Set logging formats and logs directory
@@ -36,7 +38,7 @@ def train(model_name,
 
     hyperparams = {
         'network': 'mlp',
-        'total_timesteps': int(5e3),
+        'total_timesteps': int(1e5),
         'lr': 5e-4,
         'prioritized_replay': True,
         'buffer_size': int(3e4),
@@ -49,7 +51,7 @@ def train(model_name,
         'checkpoint_path': str(model_dir),
         'print_freq': 10,
         'gamma': GAMMA,
-        'seed': 0,
+        'seed': seed,
         'num_layers': 3,
         'num_hidden': 64,
         'activation': tf.nn.relu

@@ -21,11 +21,11 @@ that needs to be modified.
 """
 
 VAL_ENCS_SEED = 44
-NUM_ENCS = 5
+NUM_ENCS = 5000
 PNMAC = .15
 
-pnmacs = [.05, .1, .15, .25, .5, .75]
-rw_shaping_coeffs = [1e-4, 3e-4, 1e-3, 3e-3, 1e-2, 3e-2]
+pnmacs = [.05, .1, .15, .25, .5]
+rw_shaping_coeffs = [1e-4, 3e-4, 1e-3, 3e-3, 1e-2]
 int_behaviors = [random_act_encounter, no_act_encounter, 
     sticky_act_encounter, single_act_encounter]
 
@@ -55,7 +55,7 @@ int_behaviors = [random_act_encounter, no_act_encounter,
 # >>>>>> PNMAC EXPERIMENT <<<<<<<<<<<<<<<
 def pnmac_train(pnmac, seed):
     model_name = f'pnmac_exp_{pnmac}_s{seed}'
-    model_dir = train(model_name, p_nmac=pnmac)
+    model_dir = train(model_name, p_nmac=pnmac, seed=seed)
 
 
 def pnmac_validate(pnmac, seed):
@@ -67,7 +67,7 @@ def pnmac_validate(pnmac, seed):
 def rw_shaping_train(rw_shaping_coeff, seed):
     model_name = f'rw_shaping_exp{rw_shaping_coeff}_s{seed}'
     model_dir = train(model_name, 
-        shaping_coeff=rw_shaping_coeff)
+        shaping_coeff=rw_shaping_coeff, seed=seed)
 
 def rw_shaping_validate(rw_shaping_coeff, seed):
     model_name = f'rw_shaping_exp{rw_shaping_coeff}_s{seed}'
@@ -78,7 +78,7 @@ def rw_shaping_validate(rw_shaping_coeff, seed):
 def intruder_behavior_train(encounter_gen_fun, seed):
     model_name = f'int_behavior{encounter_gen_fun.__name__}_s{seed}'
     model_dir = train(model_name, 
-        encounter_gen_fun=encounter_gen_fun)
+        encounter_gen_fun=encounter_gen_fun, seed=seed)
 
 
 def intruder_behavior_validate(encounter_gen_fun, seed):
