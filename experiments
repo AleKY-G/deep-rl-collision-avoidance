@@ -17,15 +17,17 @@ Things to do before experiment:
 [x] Validation encounters.
 [x] Metrics collection.
 
+
 Saving Training Data:
-[ ] Create new directory when training a model and save:
-    1. Hyperparameters.
-    2. Reward structure.
-    3. Training logs.
+[x] Create new directory when training a model and save:
+    1.[x] Hyperparameters.
+    2.[x] Reward structure.
+    3.[x] Training logs (tensorboard). (doesn't work)
+    4.[ ] Use baselines plotting utils.
 [ ] When running validation on a model, use the same training directory to save:
-    1. Number and seed of validation set.
-    2. Metrics collected from validation.
-    3. Plotting data from validation sets.
+    1.[ ] Number and seed of validation set.
+    2.[ ] Metrics collected from validation.
+    3.[ ] Plotting data from validation sets.
 [ ] Set up experiments:
     1. Create sets of hyperparameters and run training on each setting. Repeat same setting for 3 different seeds. Label experiment directory by experiment run.
     2. Right after training, run validation for each trained model.

@@ -6,12 +6,11 @@ GAMMA = .99
 rw_vals = {
     'nmac': -10,
     'alert': -.1,
-    'reversal': -.3,
-    'distance': 0
+    'reversal': -.3
 }
 
 
-def reward(obs, obs_new, a):
+def reward(obs, obs_new, a, shaping_coeff=0):
     r = 0
 
     # Penalize NMAC
@@ -27,7 +26,7 @@ def reward(obs, obs_new, a):
         r += rw_vals['reversal']
 
     # Shaping reward
-    r += rw_vals['distance'] * shaping_rw(obs, obs_new)
+    r += shaping_coeff * shaping_rw(obs, obs_new)
 
     return r
 

@@ -13,7 +13,11 @@ from src.encounter import no_act_encounter
 
 
 class CAEnv(Env):
-    def __init__(self, encounter_gen_fun=no_act_encounter, p_nmac=.15, seed=1):
+    def __init__(self, 
+        encounter_gen_fun=no_act_encounter, 
+        shaping_coeff=0, 
+        p_nmac=.15, 
+        seed=1):
         super(CAEnv, self).__init__()
 
         # Define observation and action spaces
@@ -116,6 +120,7 @@ class ValCAEnv(CAEnv):
     def __init__(self, val_encs, seed=0):
         self.val_encs = val_encs
         self.i = 0
+        self.max_t = 500
         super(ValCAEnv, self).__init__(seed=seed)
 
     def reset(self):
@@ -136,4 +141,5 @@ class ValCAEnv(CAEnv):
 
         return process_obs(self.obs)
 
-
+    def _is_done(self):
+        return self.obs.r > self.max_r or self.t > self.max_t

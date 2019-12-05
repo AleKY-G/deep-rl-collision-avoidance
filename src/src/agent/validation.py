@@ -2,21 +2,38 @@ import random
 from random import randrange
 
 import pandas as pd
+import tensorflow as tf
+from tqdm import tqdm
 
 from src.encounter import validation_encounter
-from src.agent.train import load
-from src.reward import is_nmac, is_alert, is_reversal, is_alert_start
+from src.agent.train import save_dir, load
+from src.mdp.reward import is_nmac, is_alert, is_reversal, is_alert_start
 from gym_ca.envs import ValCAEnv
 
 
-def create_encounter_set(n, seed=0):
+def validation(model_name, num_encs, seed, p_nmac=.15):
+    encounters = create_encounter_set(num_encs, p_nmac, seed)
+    encounter_data = collect_encounter_data(encounters, model_name)
+    metrics_df = extract_all_metrics(encounter_data)
+
+    # Save metrics in the model directory 
+    model_dir = save_dir / model_name
+    val_dir = model_dir / 'validation'
+    val_dir.mkdir(parents=True, exist_ok=True)
+
+    metrics_df.to_csv(str(val_dir / f'metrics_n{num_encs}_s{seed}.csv'), 
+        index=False)
+
+
+
+def create_encounter_set(n, p_nmac=.15, seed=0):
     random.seed(seed)
 
     encounters = []
 
     for _ in range(n):
         tca = randrange(25, 40)
-        encounters.append(validation_encounter(tca))
+        encounters.append(validation_encounter(tca, p_nmac))
 
     return encounters
 
@@ -26,16 +43,15 @@ def collect_encounter_data(encounter_set, model_name):
     env = ValCAEnv(encounter_set)
     all_encs = []
 
-    for i in range(len(encounter_set)):
+    for i in tqdm(range(len(encounter_set))):
         done, obs = False, env.reset()
         enc_info = []
 
         while not done:
-            obs, rw, done, info = env.step(policy([obs])[0])
+            obs, rw, done, info = env.step(policy([obs], stochastic=False)[0])
             st, obs, a0, a1 = \
                 info['state'], info['obs'], info['a0'], info['a1']
             enc_info.append((st.ac0, a0, st.ac1, a1, obs))
-
 
         all_encs.append(enc_info)
 

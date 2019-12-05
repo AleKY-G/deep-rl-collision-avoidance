@@ -14,7 +14,7 @@ from src.mdp.state import (AC, State, Observation,
     state_to_obs, process_obs)
 
 
-def policy_plot(phi, model_name):
+def policy_plot(phi, model_name, fig_dir):
     # Define interval we'd like to plot
     x_interval = (-5000, 15000)
     y_interval = (-10000, 10000)
@@ -56,7 +56,7 @@ def policy_plot(phi, model_name):
     plt.xlabel('X (ft)')
     plt.ylabel('Y (ft)')
     plt.title('Policy Plot')
-    plt.show()
+    plt.savefig(Path(fig_dir) / f'policy_phi{phi}.png')
 
 
 def q_plot(phi, model_name):
