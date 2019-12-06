@@ -30,28 +30,6 @@ int_behaviors = [random_act_encounter, no_act_encounter,
     sticky_act_encounter, single_act_encounter]
 
 
-# # >>>>>> PNMAC EXPERIMENT <<<<<<<<<<<<<<<
-# def pnmac_experiment():
-#     pnmacs = [.05, .1, .15, .25, .5, .75]
-
-#     for pnmac in pnmacs:
-#         seeds = sample(range(10000), 3)
-#         for seed in seeds:
-#             # Train model
-#             model_name = f'pnmac_exp_{pnmac}_s{seed}'
-#             model_dir = train(model_name, p_nmac=pnmac)
-
-#             # Run validation encounters on model and collect metrics
-#             validation(model_name, NUM_ENCS, VAL_ENCS_SEED, PNMAC)
-
-#             # Make policy plots
-#             fig_dir = model_dir / 'plots'
-#             fig_dir.mkdir(parents=True, exist_ok=True)
-
-#             for phi in [-pi/2, 0, pi/2, pi]:
-#                 policy_plot(phi, model_name, fig_dir)
-
-
 # >>>>>> PNMAC EXPERIMENT <<<<<<<<<<<<<<<
 def pnmac_train(pnmac, seed):
     model_name = f'pnmac_exp_{pnmac}_s{seed}'
