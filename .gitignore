@@ -103,13 +103,11 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# Python pickle
-*.pkl
-
 # OpenAI baselines directory
 baselines
 
-# Data files
-*.txt
-*.png
+# Encounter text
+init-encounters/validation-encounters/
+
+stable-baselines
 
