@@ -25,6 +25,9 @@ class CAEnv(Env):
         self.action_space = get_act_space()
         # self.reward_range = 
 
+        # Shaping coeff
+        self.shaping_coeff=shaping_coeff
+
         # Seed environment
         np.random.seed(seed)
         random.seed(seed)
@@ -67,7 +70,7 @@ class CAEnv(Env):
         obs_new = state_to_obs(st_new)
         
         # Calculate reward
-        rw = reward(self.obs, obs_new, a)
+        rw = reward(self.obs, obs_new, a, self.shaping_coeff)
         
         # Update variables and return
         info = {
