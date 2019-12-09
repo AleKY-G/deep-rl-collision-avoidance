@@ -29,7 +29,7 @@ def train(model_name,
     model_dir = save_dir / model_name
 
     # Set logging formats and logs directory
-    os.environ['OPENAI_LOG_FORMAT'] = 'stdout,csv,tensorboard'
+    os.environ['OPENAI_LOG_FORMAT'] = 'stdout,log,csv,tensorboard'
     os.environ['OPENAI_LOGDIR'] = str(model_dir / 'logs')
 
     # Make model and logging directories

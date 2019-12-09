@@ -9,15 +9,15 @@ from src.mdp.state import (get_obs_space, State, state_to_obs,
 from src.mdp.action import get_act_space
 from src.mdp.transition import advance_ac
 from src.mdp.reward import reward
-from src.encounter import no_act_encounter
+from src.encounter import random_act_encounter
 
 
 class CAEnv(Env):
     def __init__(self, 
-        encounter_gen_fun=no_act_encounter, 
+        encounter_gen_fun=random_act_encounter, 
         shaping_coeff=0, 
-        p_nmac=.15, 
-        seed=1):
+        p_nmac=.1, 
+        seed=0):
         super(CAEnv, self).__init__()
 
         # Define observation and action spaces
