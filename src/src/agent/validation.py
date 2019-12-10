@@ -68,8 +68,8 @@ def extract_encounter_metrics(encounter_data):
     - Proportion of episodes with reversal.
     """
     nmac = False
-    alert = False
-    reversal = False
+    alert = 0
+    reversal = 0
     segments = 0
 
     for step_info in encounter_data:
@@ -81,11 +81,11 @@ def extract_encounter_metrics(encounter_data):
 
         # ALERT
         if is_alert(a0):
-            alert = True
+            alert += 1
 
         # REVERSAL
         if is_reversal(obs.prev_a, a0):
-            reversal = True
+            reversal += 1
 
         # SEGMENTS
         if is_alert_start(obs.prev_a, a0):
