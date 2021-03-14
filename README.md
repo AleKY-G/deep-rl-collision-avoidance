@@ -1,5 +1,9 @@
 # Aircraft Collision Avoidance Through Deep RL
 
+<p align="center>
+          <img src="https://github.com/osmanylc/deep-rl-collision-avoidance/encounter_path.png"/>
+</p>
+
 An environment for simulating encounters between aircraft for the purpose of creating collision avoidance systems. It is compatible with the collection of deep reinforcement learning models made available by OpenAI's `baselines` repo.
 
 ## Environment Setup Instructions
