@@ -1,5 +1,7 @@
 # Aircraft Collision Avoidance Through Deep RL
 
+An environment for simulating encounters between aircraft for the purpose of creating collision avoidance systems. It is compatible with the collection of deep reinforcement learning models made available by OpenAI's `baselines` repo.
+
 ## Environment Setup Instructions
 
 All of these packages are for Python, so make sure you have some version of Python 3 installed. I am running Python 3.7.4 for reference.
